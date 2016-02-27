@@ -281,8 +281,6 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
             if (putActive) actionPerformed = actionPut();
             selectPiece();
         } else {
-            if (board.getPieceSelected().getCamp()== Camp.WHITE)soundsLibrary.playWhiteSound(theme);
-            else soundsLibrary.playBlackSound(theme);
             if (moveActive) actionPerformed = testMove();
             else if (bringOutActive) actionPerformed = actionBringOut();
             else if (orientActive) actionPerformed = actionOrient();
@@ -977,6 +975,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
                 }
             }
         }
+        soundsLibrary.playPushSound(theme);
         return true;
     }
 
@@ -1113,11 +1112,9 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         }
         if(playerActive == 0) {
             playerActive = 1;
-            soundsLibrary.playBlackSound(theme);
         }
         else if(playerActive == 1) {
             playerActive = 0;
-            soundsLibrary.playWhiteSound(theme);
         }
         put.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Put")));
         move.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Move")));
@@ -1181,6 +1178,8 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
                 if(board.getPiece(mouse.getClick()[0],mouse.getClick()[1]).getCamp() == players[playerActive].getCamp()){
                     board.deselect();
                     board.select(mouse.getClick()[0],mouse.getClick()[1]);
+                    if (board.getPieceSelected().getCamp()== Camp.WHITE) soundsLibrary.playWhiteSound(theme);
+                    else soundsLibrary.playBlackSound(theme);
                 }
             }
         }

@@ -29,46 +29,25 @@ public class SoundsLibrary {
     }
 
     private void loadStandardSounds() throws MalformedURLException {
-        AudioClip button;
-        AudioClip error;
+        String standardPath = "file:res/audio/sounds/standard/";
 
-        AudioClip white1;
-        AudioClip white2;
-        AudioClip white3;
+        AudioClip button = Applet.newAudioClip(new URL(standardPath + "button.wav"));
+        AudioClip error = Applet.newAudioClip(new URL(standardPath + "error.wav"));
 
-        AudioClip black1;
-        AudioClip black2;
-        AudioClip black3;
+        AudioClip white1 = Applet.newAudioClip(new URL(standardPath + "white1.wav"));
+        AudioClip white2 = Applet.newAudioClip(new URL(standardPath + "white2.wav"));
+        AudioClip white3 = Applet.newAudioClip(new URL(standardPath + "white3.wav"));
 
-        AudioClip putPiece;
-        AudioClip out_standard;
+        AudioClip black1 = Applet.newAudioClip(new URL(standardPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(new URL(standardPath + "black2.wav"));
+        AudioClip black3 = Applet.newAudioClip(new URL(standardPath + "black3.wav"));
 
-        AudioClip walk_standard;
-        AudioClip push_standard;
-        AudioClip turn_standard;
+        AudioClip put = Applet.newAudioClip(new URL(standardPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(new URL(standardPath + "bringout.wav"));
 
-        String standardPath = "file:res/audio/sounds/";
-
-        button = Applet.newAudioClip(new URL(standardPath + "button.wav"));
-        error = Applet.newAudioClip(new URL(standardPath + "error.wav"));
-
-        white1 = Applet.newAudioClip(new URL(standardPath + "white1.mp3"));
-        //elephant1.setVolume(0.25);
-        white2 = Applet.newAudioClip(new URL(standardPath +  "white2.mp3"));
-        //elephant2.setVolume(0.1);
-        white3 = Applet.newAudioClip(new URL(standardPath + "white3.mp3"));
-        //elephant3.setVolume(0.25);
-
-        black1 = Applet.newAudioClip(new URL(standardPath + "black1.MP3"));
-        black2 = Applet.newAudioClip(new URL(standardPath + "black2.MP3"));
-        black3 = Applet.newAudioClip(new URL(standardPath + "black3.MP3"));
-
-        putPiece = Applet.newAudioClip(new URL(standardPath + "putPiece.mp3"));
-        out_standard = Applet.newAudioClip(new URL(standardPath + "out_standard.wav"));
-
-        walk_standard = Applet.newAudioClip(new URL(standardPath + "walk_standard.wav"));
-        push_standard = Applet.newAudioClip(new URL(standardPath + "push_standard.wav"));
-        turn_standard = Applet.newAudioClip(new URL(standardPath + "turn_standard.wav"));
+        AudioClip move = Applet.newAudioClip(new URL(standardPath + "move.wav"));
+        AudioClip push = Applet.newAudioClip(new URL(standardPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(new URL(standardPath + "orient.wav"));
 
         soundLibraryStandard = new HashMap<>();
         soundLibraryStandard.put("button", button);
@@ -82,113 +61,85 @@ public class SoundsLibrary {
         soundLibraryStandard.put("black2", black2);
         soundLibraryStandard.put("black3", black3);
 
-        soundLibraryStandard.put("putPiece", putPiece);
-        soundLibraryStandard.put("out_standard", out_standard);
+        soundLibraryStandard.put("put", put);
+        soundLibraryStandard.put("bringout", bringout);
 
-        soundLibraryStandard.put("walk_standard_white", walk_standard);
-        soundLibraryStandard.put("walk_standard_black", walk_standard);
-        soundLibraryStandard.put("push_standard", push_standard);
-        soundLibraryStandard.put("turn_standard", turn_standard);
+        soundLibraryStandard.put("move_white", move);
+        soundLibraryStandard.put("move_black", move);
+        soundLibraryStandard.put("push", push);
+        soundLibraryStandard.put("orient", orient);
     }
 
     private void loadChristmasSounds() throws MalformedURLException {
-        AudioClip snowman1;
-        AudioClip snowman2;
-        AudioClip snowman3;
+        String christmasPath = "file:res/audio/sounds/christmas/";
 
-        AudioClip deer1;
-        AudioClip deer2;
-        AudioClip deer3;
+        AudioClip white1 = Applet.newAudioClip(new URL(christmasPath + "white1.wav"));
+        AudioClip white2 = Applet.newAudioClip(new URL(christmasPath + "white2.wav"));
+        AudioClip white3 = Applet.newAudioClip(new URL(christmasPath + "white3.wav"));
 
-        AudioClip putChristmas;
-        AudioClip out_christmas;
+        AudioClip black1 = Applet.newAudioClip(new URL(christmasPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(new URL(christmasPath + "black2.wav"));
+        AudioClip black3 = Applet.newAudioClip(new URL(christmasPath + "black3.wav"));
 
-        AudioClip walk_deer;
-        AudioClip walk_snowman;
-        AudioClip push_christmas;
-        AudioClip turn_christmas;
+        AudioClip put = Applet.newAudioClip(new URL(christmasPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(new URL(christmasPath + "bringout.wav"));
 
-        String christmasPath = "file:res/audio/sounds/";
-
-        snowman1 = Applet.newAudioClip(new URL(christmasPath + "hohoho_1.wav"));
-        snowman2 = Applet.newAudioClip(new URL(christmasPath + "hohoho_2.wav"));
-        snowman3 = Applet.newAudioClip(new URL(christmasPath + "hohoho_3.wav"));
-
-        deer1 = Applet.newAudioClip(new URL(christmasPath + "gremlin_rire_1.wav"));
-        deer2 = Applet.newAudioClip(new URL(christmasPath + "gremlin_2.wav"));
-        deer3 = Applet.newAudioClip(new URL(christmasPath + "hahaha_jouet.wav"));
-
-        putChristmas = Applet.newAudioClip(new URL(christmasPath + "apparition_noel.mp3"));
-        out_christmas = Applet.newAudioClip(new URL(christmasPath + "sortir_piece_noel_clochette.wav"));
-        //sortieNoel.setVolume(0.45);
-
-        walk_deer = Applet.newAudioClip(new URL(christmasPath + "deplacement_renne_raccourci.wav"));
-        walk_snowman = Applet.newAudioClip(new URL(christmasPath + "deplacement_bonhomme_raccourci.wav"));
-        push_christmas = Applet.newAudioClip(new URL(christmasPath + "poussee_craquement_noel.wav"));
-        turn_christmas = Applet.newAudioClip(new URL(christmasPath + "orientation_noel.wav"));
-        //orientationNoel.setVolume(0.3);
+        AudioClip move_white = Applet.newAudioClip(new URL(christmasPath + "move_white.wav"));
+        AudioClip move_black = Applet.newAudioClip(new URL(christmasPath + "move_black.wav"));
+        AudioClip push = Applet.newAudioClip(new URL(christmasPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(new URL(christmasPath + "orient.wav"));
 
         soundLibraryChristmas = new HashMap<>();
 
-        soundLibraryChristmas.put("white1", snowman1);
-        soundLibraryChristmas.put("white2", snowman2);
-        soundLibraryChristmas.put("white3", snowman3);
+        soundLibraryChristmas.put("white1", white1);
+        soundLibraryChristmas.put("white2", white2);
+        soundLibraryChristmas.put("white3", white3);
 
-        soundLibraryChristmas.put("black1", deer1);
-        soundLibraryChristmas.put("black2", deer2);
-        soundLibraryChristmas.put("black3", deer3);
+        soundLibraryChristmas.put("black1", black1);
+        soundLibraryChristmas.put("black2", black2);
+        soundLibraryChristmas.put("black3", black3);
 
-        soundLibraryChristmas.put("putPiece", putChristmas);
-        soundLibraryChristmas.put("out_standard", out_christmas);
+        soundLibraryChristmas.put("put", put);
+        soundLibraryChristmas.put("bringout", bringout);
 
-        soundLibraryChristmas.put("walk_standard_white", walk_snowman);
-        soundLibraryChristmas.put("walk_standard_black", walk_deer);
-        soundLibraryChristmas.put("push_standard", push_christmas);
-        soundLibraryChristmas.put("turn_standard", turn_christmas);
+        soundLibraryChristmas.put("move_white", move_white);
+        soundLibraryChristmas.put("move_black", move_black);
+        soundLibraryChristmas.put("push", push);
+        soundLibraryChristmas.put("orient", orient);
     }
 
     private void loadStarWarsSounds() throws MalformedURLException {
-        AudioClip XWing;
+        String starwarsPath = "file:res/audio/sounds/starwars/";
 
-        AudioClip TIE1;
-        AudioClip TIE2;
+        AudioClip white = Applet.newAudioClip(new URL(starwarsPath + "white.wav"));
 
-        AudioClip putStarWars;
-        AudioClip out_starwars;
-        AudioClip walk_starwars;
-        AudioClip push_starwars;
-        AudioClip turn_starwars;
+        AudioClip black1 = Applet.newAudioClip(new URL(starwarsPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(new URL(starwarsPath + "black2.wav"));
 
-        String starwarsPath = "file:res/audio/sounds/";
+        AudioClip put = Applet.newAudioClip(new URL(starwarsPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(new URL(starwarsPath + "bringout.wav"));
 
-        XWing = Applet.newAudioClip(new URL(starwarsPath + "XWing.WAV"));
-
-        TIE1 = Applet.newAudioClip(new URL(starwarsPath + "TIE1.WAV"));
-        TIE2 = Applet.newAudioClip(new URL(starwarsPath + "TIE2.WAV"));
-
-        putStarWars = Applet.newAudioClip(new URL(starwarsPath + "SWPut.WAV"));
-        out_starwars = Applet.newAudioClip(new URL(starwarsPath + "SWOut.WAV"));
-        walk_starwars = Applet.newAudioClip(new URL(starwarsPath + "SWMarch.WAV"));
-        push_starwars = Applet.newAudioClip(new URL(starwarsPath + "SWPush.WAV"));
-        turn_starwars = Applet.newAudioClip(new URL(starwarsPath + "SWTurn.WAV"));
+        AudioClip move = Applet.newAudioClip(new URL(starwarsPath + "move.wav"));
+        AudioClip push = Applet.newAudioClip(new URL(starwarsPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(new URL(starwarsPath + "orient.wav"));
 
         soundLibraryStarWars = new HashMap<>();
 
-        soundLibraryStarWars.put("white1", XWing);
-        soundLibraryStarWars.put("white2", XWing);
-        soundLibraryStarWars.put("white3", XWing);
+        soundLibraryStarWars.put("white1", white);
+        soundLibraryStarWars.put("white2", white);
+        soundLibraryStarWars.put("white3", white);
 
-        soundLibraryStarWars.put("black1", TIE1);
-        soundLibraryStarWars.put("black2", TIE2);
-        soundLibraryStarWars.put("black3", TIE1);
+        soundLibraryStarWars.put("black1", black1);
+        soundLibraryStarWars.put("black2", black2);
+        soundLibraryStarWars.put("black3", black1);
 
-        soundLibraryStarWars.put("putPiece", putStarWars);
-        soundLibraryStarWars.put("out_standard", out_starwars);
+        soundLibraryStarWars.put("put", put);
+        soundLibraryStarWars.put("bringout", bringout);
 
-        soundLibraryStarWars.put("walk_standard_white", walk_starwars);
-        soundLibraryStarWars.put("walk_standard_black", walk_starwars);
-        soundLibraryStarWars.put("push_standard", push_starwars);
-        soundLibraryStarWars.put("turn_standard", turn_starwars);
+        soundLibraryStarWars.put("move_white", move);
+        soundLibraryStarWars.put("move_black", move);
+        soundLibraryStarWars.put("push", push);
+        soundLibraryStarWars.put("orient", orient);
     }
 
     private void playAudio(String name, Theme theme){
@@ -244,26 +195,26 @@ public class SoundsLibrary {
     }
 
     public void playPushSound(Theme theme) {
-        playAudio("push_standard", theme);
+        playAudio("push", theme);
     }
 
     public void playWalkSound(Theme theme,  Camp camp){
         switch (camp){
             case WHITE:
-                playAudio("walk_standard_white", theme);
+                playAudio("move_white", theme);
                 break;
             case BLACK:
-                playAudio("walk_standard_black", theme);
+                playAudio("move_black", theme);
                 break;
         }
     }
 
     public void playTurnSound(Theme theme){
-        playAudio("turn_standard", theme);
+        playAudio("orient", theme);
     }
 
     public void playPutSound(Theme theme) {
-        playAudio("putPiece", theme);
+        playAudio("put", theme);
     }
 
     public void playErrorActionSound(){
@@ -271,6 +222,6 @@ public class SoundsLibrary {
     }
 
     public void playOutSound(Theme theme){
-        playAudio("out_standard", theme);
+        playAudio("bringout", theme);
     }
 }
