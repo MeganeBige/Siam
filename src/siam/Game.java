@@ -276,6 +276,8 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         setButtonEnabled();
         boolean actionPerformed = false;
         if (!board.pieceSelected()) {
+            if (mouse.getClick()[0] < 0 || mouse.getClick()[0] >= BOARD_SIZE ||
+                    mouse.getClick()[1] < 0 || mouse.getClick()[1] >= BOARD_SIZE) return;
             if (putActive) actionPerformed = actionPut();
             selectPiece();
         } else {
