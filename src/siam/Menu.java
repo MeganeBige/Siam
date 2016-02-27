@@ -46,6 +46,7 @@ public class Menu implements ActionListener, Constants, Texts {
     private JLabel victory;
 
     private Player winner;
+    private Player loser;
     private Music music;
     private SoundsLibrary soundsLibrary;
 
@@ -107,19 +108,25 @@ public class Menu implements ActionListener, Constants, Texts {
         frame.setVisible(true);
     }
 
-    public Menu(JFrame frame, Player winner, Music music,
-                SoundsLibrary soundsLibrary, boolean songEnable, Theme theme) {
+    public Menu(JFrame frame, Player winner, Player loser, Music music,
+                SoundsLibrary soundsLibrary, boolean songEnable, Theme theme,
+                boolean variantPieceOn, boolean variantTileOn, boolean variantMountainOn) {
         optionState = false;
         campState = false;
         winnerState = true;
 
         this.themes = theme;
         this.winner = winner;
+        this.loser = loser;
 
         this.frame = frame;
         this.music = music;
         this.songEnable = songEnable;
         this.soundsLibrary = soundsLibrary;
+
+        this.variantPieceOn = variantPieceOn;
+        this.variantTileOn = variantTileOn;
+        this.variantMountainOn = variantMountainOn;
 
         Dimension dimension = new Dimension(WIN_WIDTH, WIN_HEIGTH);
         frame.setPreferredSize(dimension);
@@ -481,7 +488,7 @@ public class Menu implements ActionListener, Constants, Texts {
         if (winnerState) {
             if (source == play) {
                 new Game(frame, music, soundsLibrary, songEnable, variantMountainOn,
-                        variantPieceOn, variantTileOn, themes, getBlackField(), getWhiteField());
+                        variantPieceOn, variantTileOn, themes, loser.getName(), winner.getName());
             } else if (source == exit) {
                 new Menu(frame, false, false, music, soundsLibrary, songEnable, themes);
             }
