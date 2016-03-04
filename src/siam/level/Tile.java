@@ -18,6 +18,13 @@ public class Tile implements Constants {
         sprite = Sprite.tile;
     }
 
+    public Tile(Tile tile) {
+        x = tile.x;
+        y = tile.y;
+        banished = tile.banished;
+        sprite = tile.sprite;
+    }
+
     public boolean isEmpty(){
         return piece == null;
     }

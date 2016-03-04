@@ -67,6 +67,15 @@ public class FontTools {
         checkBox.setFont(police);
     }
 
+    public void updateFondJRadioButton(JRadioButton radioButton, int size, Color color, Font font) {
+        police = font.deriveFont(Font.TRUETYPE_FONT, size);
+        radioButton.setForeground(color);
+        radioButton.setOpaque(false);
+        radioButton.setBorderPainted(false);
+        radioButton.setContentAreaFilled(false);
+        radioButton.setFont(police);
+    }
+
     public Font getMenuFont() {
         return menuFont;
     }

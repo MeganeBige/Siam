@@ -1,10 +1,10 @@
 package siam.player;
 
 public enum Move {
-    PUT_EMPTY,
     PUT,
+    PUT_PUSH,
     BRINGOUT,
-    MOVE_EMPTY,
     MOVE,
+    PUSH,
     ORIENT
 }

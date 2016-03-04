@@ -7,6 +7,7 @@ import siam.graphics.Sprite;
 import siam.graphics.TextureManager;
 import siam.level.*;
 import siam.player.Camp;
+import siam.player.Computer;
 import siam.player.Player;
 import siam.player.Theme;
 
@@ -15,6 +16,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game implements Runnable, ActionListener, Constants, Texts {
@@ -30,6 +33,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
     private int playerActive;
     private boolean putActive, moveActive, orientActive, bringOutActive, upActive,downActive,leftActive,rightActive;
     private boolean enableUp, enableDown, enableLeft, enableRight;
+    private boolean computerPlay;
 
     private boolean songEnable = false;
     private boolean variantMountainOn;
@@ -74,6 +78,46 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         playerActive = 0;
         players[0] = new Player(Camp.WHITE, white);
         players[1] = new Player(Camp.BLACK, black);
+
+        this.frame = frame;
+
+        Dimension dimension = new Dimension(WIN_WIDTH, WIN_HEIGTH);
+        frame.setPreferredSize(dimension);
+
+        putActive = moveActive = orientActive = bringOutActive = upActive = downActive = rightActive = leftActive =  false;
+        enableUp = enableDown = enableRight = enableLeft = false;
+        initFrame();
+        renderFrame();
+
+        mouse = new MouseHandler();
+        setControl(this);
+        nbTours = 0;
+
+        frame.setVisible(true);
+
+        setButtonEnabled();
+        start();
+    }
+
+    public Game(JFrame frame, Music music, SoundsLibrary soundsLibrary,
+                boolean songEnable, Theme theme,
+                String black, boolean blackChoose, String white) {
+        this.music = music;
+        this.soundsLibrary = soundsLibrary;
+        this.songEnable = songEnable;
+        this.theme = theme;
+
+        board = new Board(BOARD_SIZE, variantMountainOn, variantTileOn);
+        players = new Player[2];
+        playerActive = 0;
+        if (blackChoose) {
+            players[1] = new Player(Camp.BLACK, black);
+            players[0] = new Computer(this, Camp.WHITE, players[1]);
+        } else {
+            players[0] = new Player(Camp.WHITE, white);
+            players[1] = new Computer(this, Camp.BLACK, players[0]);
+        }
+        computerPlay = false;
 
         this.frame = frame;
 
@@ -275,21 +319,28 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
     public void update() {
         setButtonEnabled();
         boolean actionPerformed = false;
-        if (!board.pieceSelected()) {
-            if (mouse.getClick()[0] < 0 || mouse.getClick()[0] >= BOARD_SIZE ||
-                    mouse.getClick()[1] < 0 || mouse.getClick()[1] >= BOARD_SIZE) return;
-            if (putActive) actionPerformed = actionPut();
-            selectPiece();
+        if (players[playerActive] instanceof Computer) {
+            if (!computerPlay) {
+                ((Computer) players[playerActive]).play(2); // 2 -> 1 coup d'avance
+                computerPlay = true;
+            }
         } else {
-            if (moveActive) actionPerformed = testMove();
-            else if (bringOutActive) actionPerformed = actionBringOut();
-            else if (orientActive) actionPerformed = actionOrient();
-        }
-        if(actionPerformed) nextPlayer();
-        if (mouse.isRightClick() && !orientActive) {
-            board.deselect();
-            resetButton();
-            setButtonSelected(10);
+            if (!board.pieceSelected()) {
+                if (mouse.getClick()[0] < 0 || mouse.getClick()[0] >= BOARD_SIZE ||
+                        mouse.getClick()[1] < 0 || mouse.getClick()[1] >= BOARD_SIZE) return;
+                if (putActive) actionPerformed = actionPut();
+                selectPiece();
+            } else {
+                if (moveActive) actionPerformed = testMove();
+                else if (bringOutActive) actionPerformed = actionBringOut();
+                else if (orientActive) actionPerformed = actionOrient();
+            }
+            if (actionPerformed) nextPlayer();
+            if (mouse.isRightClick() && !orientActive) {
+                board.deselect();
+                resetButton();
+                setButtonSelected(10);
+            }
         }
     }
 
@@ -299,7 +350,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
     }
 
     public void render() {
-
+        board.repaint();
     }
 
     private void setControl(ActionListener actionListener) {
@@ -326,7 +377,12 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
             frame.setJMenuBar(null);
             new Menu(frame, false, true, music, soundsLibrary, songEnable, theme);
         } else if (source == rules) {
-            //TODO - Affichage règles
+            File pdf = new File("res/rules/rules.pdf");
+            try {
+                Desktop.getDesktop().open(pdf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (source == backToMenu) {
             frame.setJMenuBar(null);
             new Menu(frame, false, false, music, soundsLibrary, songEnable, theme);
@@ -385,9 +441,16 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         move.setEnabled(board.pieceSelected() && !orientActive);
         bringOut.setEnabled(testBringOut() && !orientActive);
         orient.setEnabled(board.pieceSelected() && !orientActive);
+
+        if (players[playerActive] instanceof Computer) {
+            put.setEnabled(false);
+            move.setEnabled(false);
+            bringOut.setEnabled(false);
+            orient.setEnabled(false);
+        }
     }
 
-    public void setButtonSelected(int buttonSelected){
+    public void setButtonSelected(int buttonSelected) {
         switch(buttonSelected){
             case 1:
                 putActive = true;
@@ -421,7 +484,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         }
     }
 
-    public boolean testBringOut(){
+    public boolean testBringOut() {
         if(board.getPieceSelected() != null){
             if (variantPieceOn && players[playerActive].canBringOut() || !variantPieceOn) {
                 int[] coord = convertPixToCase(board.getPieceSelected().getCoord());
@@ -489,23 +552,25 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         frame.setJMenuBar(null);
         if(players[0].getCamp() == winner){
             new Menu(frame,players[0],players[1],music,soundsLibrary,songEnable,theme,
-                    variantPieceOn,variantTileOn,variantMountainOn);
+                    variantPieceOn,variantTileOn,variantMountainOn,
+                    players[0] instanceof Computer || players[1] instanceof Computer);
         }
         else if(players[1].getCamp() == winner){
             new Menu(frame,players[1],players[0],music,soundsLibrary,songEnable,theme,
-                    variantPieceOn,variantTileOn,variantMountainOn);
+                    variantPieceOn,variantTileOn,variantMountainOn,
+                    players[0] instanceof Computer || players[1] instanceof Computer);
         }
     }
 
-    public void testVictoryMountains(int[] coord){
+    public void testVictoryMountains(int[] coord) {
         frame.setJMenuBar(null);
         if(board.getPiece(coord[0],coord[1]).getCamp() == Camp.BLACK){
             new Menu(frame,players[1],players[0],music,soundsLibrary,songEnable,theme,
-                    variantPieceOn,variantTileOn,variantMountainOn);
+                    variantPieceOn,variantTileOn,variantMountainOn, false);
         }
         else if(board.getPiece(coord[0],coord[1]).getCamp() == Camp.WHITE){
             new Menu(frame,players[0],players[1],music,soundsLibrary,songEnable,theme,
-                    variantPieceOn,variantTileOn,variantMountainOn);
+                    variantPieceOn,variantTileOn,variantMountainOn, false);
         }
     }
 
@@ -782,6 +847,57 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         return false;
     }
 
+    public void actionPut(int[] coord, Orientation orientation, Player player) {
+        int[] coordPix = convertCaseToPix(coord);
+        Animal animal = new Animal(coordPix[0], coordPix[1], player.getCamp(), Orientation.TOP);
+        animal.selected();
+        board.putPiece(animal);
+        soundsLibrary.playPutSound(theme);
+        players[playerActive].put();
+        actionOrient(coord, orientation);
+    }
+
+    public void actionPutPush(int[] coord, Orientation direction, Player player) {
+        ArrayList<int[]> pile = new ArrayList<>();
+        int x = coord[0];
+        int y = coord[1];
+        int[] modDir = new int[2];
+        switch (direction) {
+            case TOP:
+                modDir = new int[]{0, -1};
+                break;
+            case DOWN:
+                modDir = new int[]{0, 1};
+                break;
+            case LEFT:
+                modDir = new int[]{-1, 0};
+                break;
+            case RIGTH:
+                modDir = new int[]{1, 0};
+                break;
+        }
+        int nbCase = 0;
+        while (board.isInBound(x + nbCase * modDir[0], y + nbCase * modDir[1])
+                && !board.isFree(x + nbCase * modDir[0], y + nbCase * modDir[1])) {
+            pile.add(new int[]{x + nbCase * modDir[0], y + nbCase * modDir[1]});
+            nbCase++;
+        }
+        for (int i = pile.size() - 1; i >= 0; i--) {
+            int[] newCoord = {pile.get(i)[0]+modDir[0], pile.get(i)[1]+modDir[1]};
+            if (board.isInBound(newCoord[0], newCoord[1])) {
+                if(board.getPiece(pile.get(i)[0],pile.get(i)[1]) instanceof Mountain) actionMove(pile.get(i),
+                        direction, Orientation.TOP);
+                else actionMove(pile.get(i), direction,
+                        ((Animal) board.getPiece(pile.get(i)[0],pile.get(i)[1])).getOrientation());
+            } else {
+                if(board.getPiece(pile.get(i)[0],pile.get(i)[1]) instanceof Mountain) testVictory(newCoord);
+                else actionBringOut(pile.get(i));
+            }
+        }
+        soundsLibrary.playPushSound(theme);
+        actionPut(coord, direction, player);
+    }
+
     public boolean testEnterWithPush(Orientation orientation) {
         if (orientation == null) {
             return false;
@@ -897,7 +1013,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         return false;
     }
 
-    public boolean oppositeDirection(Orientation o1, Orientation o2){
+    public boolean oppositeDirection(Orientation o1, Orientation o2) {
         if(o1 == Orientation.DOWN && o2 == Orientation.TOP){
             return true;
         }
@@ -979,7 +1095,47 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         return true;
     }
 
-    public boolean actionBringOut(){
+    public void actionPush(int[] coord) {
+        ArrayList<int[]> pile = new ArrayList<>();
+        int x = coord[0];
+        int y = coord[1];
+        Orientation direction = ((Animal) board.getPiece(x, y)).getOrientation();
+        int[] modDir = new int[2];
+        switch (direction) {
+            case TOP:
+                modDir = new int[]{0, -1};
+                break;
+            case DOWN:
+                modDir = new int[]{0, 1};
+                break;
+            case LEFT:
+                modDir = new int[]{-1, 0};
+                break;
+            case RIGTH:
+                modDir = new int[]{1, 0};
+                break;
+        }
+        int nbCase = 0;
+        while (board.isInBound(x + nbCase * modDir[0], y + nbCase * modDir[1])
+                && !board.isFree(x + nbCase * modDir[0], y + nbCase * modDir[1])) {
+            pile.add(new int[]{x + nbCase * modDir[0], y + nbCase * modDir[1]});
+            nbCase++;
+        }
+        for (int i = pile.size() - 1; i >= 0; i--) {
+            int[] newCoord = {pile.get(i)[0]+modDir[0], pile.get(i)[1]+modDir[1]};
+            if (board.isInBound(newCoord[0], newCoord[1])) {
+                if(board.getPiece(pile.get(i)[0],pile.get(i)[1]) instanceof Mountain) actionMove(pile.get(i),
+                        direction, Orientation.TOP);
+                else actionMove(pile.get(i), direction,
+                        ((Animal) board.getPiece(pile.get(i)[0],pile.get(i)[1])).getOrientation());
+            } else {
+                if(board.getPiece(pile.get(i)[0],pile.get(i)[1]) instanceof Mountain) testVictory(newCoord);
+                actionBringOut(pile.get(i));
+            }
+        }
+    }
+
+    public boolean actionBringOut() {
         board.removePiece(convertPixToCase(board.getPieceSelected().getCoord()));
         soundsLibrary.playOutSound(theme);
         players[playerActive].bringOut();
@@ -989,7 +1145,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         return true;
     }
 
-    public void actionBringOut(int[] coord){
+    public void actionBringOut(int[] coord) {
         Animal p = (Animal) board.getPiece(coord[0], coord[1]);
         if(players[0].getCamp() == p.getCamp()){
             players[0].bringOut();
@@ -1000,19 +1156,103 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         soundsLibrary.playOutSound(theme);
     }
 
-    public void actionMove(){
+    public void actionBringOut(int[] coord, Player player) {
+        player.bringOut();
+        board.removePiece(coord);
+        soundsLibrary.playOutSound(theme);
+    }
+
+    public void actionMove() {
         int[] newCoordPix = convertCaseToPix(mouse.getClick());
         int[] oldCoordCase = convertPixToCase(board.getPieceSelected().getCoord());
         board.movePiece(mouse.getClick()[0],mouse.getClick()[1], oldCoordCase[0], oldCoordCase[1]);
-        board.getPieceSelected().setPosition(newCoordPix[0],newCoordPix[1]);
+        int[] oldCoordPix = board.getPieceSelected().getCoord();
+        int[] direction = new int[2];
+        if (oldCoordPix[0]-newCoordPix[0] == 128) direction[0] = -1;
+        else if (oldCoordPix[0]-newCoordPix[0] == -128) direction[0] = 1;
+        else direction[0] = 0;
+        if (oldCoordPix[1]-newCoordPix[1] == 128) direction[1] = -1;
+        else if (oldCoordPix[1]-newCoordPix[1] == -128) direction[1] = 1;
+        else direction[1] = 0;
+        board.pieceMoving(board.getPieceSelected());
         if(board.getPieceSelected().getCamp() == Camp.WHITE) soundsLibrary.playWalkSound(theme, Camp.WHITE);
         else soundsLibrary.playWalkSound(theme, Camp.BLACK);
+        for (int i = 0; i < 128; i++) {
+            board.getPieceSelected().setPosition(oldCoordPix[0] + i*direction[0], oldCoordPix[1] + i*direction[1]);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        board.pieceStopMoving();
+        board.getPieceSelected().setPosition(newCoordPix[0],newCoordPix[1]);
     }
 
-    public void actionMove(int[] old, int[] newCoord){
+    public void actionMove(int[] old, int[] newCoord) {
         int[] newCoordPix = convertCaseToPix(newCoord);
         board.movePiece(newCoord[0],newCoord[1], old[0], old[1]);
+        int[] oldCoordPix = convertCaseToPix(old);
+        int[] direction = new int[2];
+        if (oldCoordPix[0]-newCoordPix[0] == 128) direction[0] = -1;
+        else if (oldCoordPix[0]-newCoordPix[0] == -128) direction[0] = 1;
+        else direction[0] = 0;
+        if (oldCoordPix[1]-newCoordPix[1] == 128) direction[1] = -1;
+        else if (oldCoordPix[1]-newCoordPix[1] == -128) direction[1] = 1;
+        else direction[1] = 0;
+        board.pieceMoving(board.getPiece(newCoord[0],newCoord[1]));
+        if(board.getPiece(newCoord[0],newCoord[1]).getCamp() == Camp.WHITE) soundsLibrary.playWalkSound(theme, Camp.WHITE);
+        else soundsLibrary.playWalkSound(theme, Camp.BLACK);
+        for (int i = 0; i < 128; i++) {
+            board.getPiece(newCoord[0],newCoord[1]).setPosition(oldCoordPix[0] + i*direction[0], oldCoordPix[1] + i*direction[1]);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        board.pieceStopMoving();
         board.getPiece(newCoord[0],newCoord[1]).setPosition(newCoordPix[0],newCoordPix[1]);
+    }
+
+    public void actionMove(int[] coord, Orientation direction, Orientation orientation) {
+        board.movePiece(coord[0], coord[1], direction);
+        int[] oldCoordPix = convertCaseToPix(coord);
+        switch (direction) {
+            case TOP:
+                coord[1]--;
+                break;
+            case DOWN:
+                coord[1]++;
+                break;
+            case LEFT:
+                coord[0]--;
+                break;
+            case RIGTH:
+                coord[0]++;
+                break;
+        }
+        int[] newCoordPix = convertCaseToPix(coord);
+        int[] dir = new int[2];
+        if (oldCoordPix[0]-newCoordPix[0] == 128) dir[0] = -1;
+        else if (oldCoordPix[0]-newCoordPix[0] == -128) dir[0] = 1;
+        else dir[0] = 0;
+        if (oldCoordPix[1]-newCoordPix[1] == 128) dir[1] = -1;
+        else if (oldCoordPix[1]-newCoordPix[1] == -128) dir[1] = 1;
+        else dir[1] = 0;
+        board.pieceMoving(board.getPiece(coord[0], coord[1]));
+        if(board.getPiece(coord[0],coord[1]).getCamp() == Camp.WHITE) soundsLibrary.playWalkSound(theme, Camp.WHITE);
+        else soundsLibrary.playWalkSound(theme, Camp.BLACK);
+        for (int i = 0; i < 128; i++) {
+            board.getPiece(coord[0],coord[1]).setPosition(oldCoordPix[0] + i*dir[0], oldCoordPix[1] + i*dir[1]);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        board.pieceStopMoving();
+        if (board.getPiece(coord[0],coord[1]) instanceof Animal) actionOrient(coord, orientation);
     }
 
     public boolean actionOrient() {
@@ -1052,6 +1292,17 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
             }
         }
         return false;
+    }
+
+    public void actionOrient(int[] coord, Orientation orientation) {
+        soundsLibrary.playTurnSound(theme);
+        Orientation oldOrient = ((Animal) board.getPiece(coord[0], coord[1])).getOrientation();
+        board.select(coord[0],coord[1]);
+        ((Animal) board.getPiece(coord[0], coord[1])).setOrientation(orientation);
+        double angle = getAngle(oldOrient, orientation);
+        if(angle != 0)
+            board.getPieceSelected().setSprite(Sprite.rotate(board.getPieceSelected().getSprite(),angle));
+        board.deselect();
     }
 
     public Orientation whichOrient(int where) {
@@ -1104,7 +1355,8 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         return new int[]{point[0]/SPRITE_SIZE,point[1]/SPRITE_SIZE};
     }
 
-    public void nextPlayer(){
+    public void nextPlayer() {
+        board.deselect();
         nbTours++;
         if (variantTileOn && nbTours == 4) {
             board.changeTile(2, (BOARD_SIZE - 1), false);
@@ -1112,9 +1364,10 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         }
         if(playerActive == 0) {
             playerActive = 1;
-        }
-        else if(playerActive == 1) {
+            computerPlay = false;
+        } else if(playerActive == 1) {
             playerActive = 0;
+            computerPlay = false;
         }
         put.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Put")));
         move.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Move")));
@@ -1213,4 +1466,5 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
         }
         return false;
     }
+
 }
