@@ -49,14 +49,6 @@ public class Tile implements Constants {
         this.piece = null;
     }
 
-    public void brigOutPiece() {
-        piece = null;
-    }
-
-    public void orientPiece(Orientation orientation) {
-        ((Animal)piece).setOrientation(orientation);
-    }
-
     public void render(Screen screen) {
         screen.renderTile(x, y, this);
         if (!isEmpty()) piece.render(screen);

@@ -60,6 +60,7 @@ public class Menu implements ActionListener, Constants, Texts {
 
     private Theme themes = Theme.STANDARD;
 
+    // Utilisé uniquement la première frois
     public Menu() {
         optionState = false;
         campState = false;
@@ -88,6 +89,7 @@ public class Menu implements ActionListener, Constants, Texts {
         frame.setVisible(true);
     }
 
+    // Utilisé pour le menu de base, les options et les différentes style de jeu
     public Menu(JFrame frame, boolean option, boolean play, Music music,
                 SoundsLibrary soundsLibrary, boolean songEnable, Theme theme) {
         if (option && play) play = false;
@@ -114,6 +116,7 @@ public class Menu implements ActionListener, Constants, Texts {
         frame.setVisible(true);
     }
 
+    // Utilisé pour choisir son camp
     public Menu(JFrame frame, boolean ai, Music music, SoundsLibrary soundsLibrary,
                 boolean songEnable, Theme theme) {
         optionState = false;
@@ -144,6 +147,7 @@ public class Menu implements ActionListener, Constants, Texts {
         frame.setVisible(true);
     }
 
+    // Utilisé pour les victoires
     public Menu(JFrame frame, Player winner, Player loser, Music music,
                 SoundsLibrary soundsLibrary, boolean songEnable, Theme theme,
                 boolean variantPieceOn, boolean variantTileOn, boolean variantMountainOn,
@@ -647,9 +651,8 @@ public class Menu implements ActionListener, Constants, Texts {
             }
         } else if (optionState) {
             if (source == rules) {
-                File pdf = new File("res/rules/rules.pdf");
                 try {
-                    Desktop.getDesktop().open(pdf);
+                    Desktop.getDesktop().open(new File("rules.pdf"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

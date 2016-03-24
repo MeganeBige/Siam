@@ -377,9 +377,8 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
             frame.setJMenuBar(null);
             new Menu(frame, false, true, music, soundsLibrary, songEnable, theme);
         } else if (source == rules) {
-            File pdf = new File("res/rules/rules.pdf");
             try {
-                Desktop.getDesktop().open(pdf);
+                Desktop.getDesktop().open(new File("rules.pdf"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1130,7 +1129,7 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
                         ((Animal) board.getPiece(pile.get(i)[0],pile.get(i)[1])).getOrientation());
             } else {
                 if(board.getPiece(pile.get(i)[0],pile.get(i)[1]) instanceof Mountain) testVictory(newCoord);
-                actionBringOut(pile.get(i));
+                else actionBringOut(pile.get(i));
             }
         }
     }
@@ -1369,6 +1368,8 @@ public class Game implements Runnable, ActionListener, Constants, Texts {
             playerActive = 0;
             computerPlay = false;
         }
+        setButtonSelected(10);
+        enableUp = enableDown = enableRight = enableLeft = false;
         put.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Put")));
         move.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Move")));
         orient.setIcon(new ImageIcon(TextureManager.library.getImage(theme, "Button Orient")));

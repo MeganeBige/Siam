@@ -17,17 +17,17 @@ public class Music extends Thread {
 
     public Music(Theme theme){
         this.theme = theme;
-        standardSounds = new String[]{"res/audio/songs/Standard1.mp3",
-                                        "res/audio/songs/Standard2.mp3",
-                                        "res/audio/songs/Standard3.mp3"};
-        christmasSounds = new String[]{"res/audio/songs/Noel1.mp3",
-                                    "res/audio/songs/Noel2.mp3",
-                                    "res/audio/songs/Noel3.mp3"};
-        starWarsSounds = new String[]{"res/audio/songs/StarWars1.mp3",
-                                        "res/audio/songs/StarWars2.mp3",
-                                        "res/audio/songs/StarWars3.mp3",
-                                        "res/audio/songs/StarWars4.mp3",
-                                        "res/audio/songs/StarWars5.mp3"};
+        standardSounds = new String[]{"/audio/songs/Standard1.mp3",
+                                        "/audio/songs/Standard2.mp3",
+                                        "/audio/songs/Standard3.mp3"};
+        christmasSounds = new String[]{"/audio/songs/Noel1.mp3",
+                                    "/audio/songs/Noel2.mp3",
+                                    "/audio/songs/Noel3.mp3"};
+        starWarsSounds = new String[]{"/audio/songs/StarWars1.mp3",
+                                        "/audio/songs/StarWars2.mp3",
+                                        "/audio/songs/StarWars3.mp3",
+                                        "/audio/songs/StarWars4.mp3",
+                                        "/audio/songs/StarWars5.mp3"};
 
     }
 

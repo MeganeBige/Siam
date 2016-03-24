@@ -6,7 +6,6 @@ import siam.player.Theme;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -29,25 +28,25 @@ public class SoundsLibrary {
     }
 
     private void loadStandardSounds() throws MalformedURLException {
-        String standardPath = "file:res/audio/sounds/standard/";
+        String standardPath = "/audio/sounds/standard/";
 
-        AudioClip button = Applet.newAudioClip(new URL(standardPath + "button.wav"));
-        AudioClip error = Applet.newAudioClip(new URL(standardPath + "error.wav"));
+        AudioClip button = Applet.newAudioClip(getClass().getResource(standardPath + "button.wav"));
+        AudioClip error = Applet.newAudioClip(getClass().getResource(standardPath + "error.wav"));
 
-        AudioClip white1 = Applet.newAudioClip(new URL(standardPath + "white1.wav"));
-        AudioClip white2 = Applet.newAudioClip(new URL(standardPath + "white2.wav"));
-        AudioClip white3 = Applet.newAudioClip(new URL(standardPath + "white3.wav"));
+        AudioClip white1 = Applet.newAudioClip(getClass().getResource(standardPath + "white1.wav"));
+        AudioClip white2 = Applet.newAudioClip(getClass().getResource(standardPath + "white2.wav"));
+        AudioClip white3 = Applet.newAudioClip(getClass().getResource(standardPath + "white3.wav"));
 
-        AudioClip black1 = Applet.newAudioClip(new URL(standardPath + "black1.wav"));
-        AudioClip black2 = Applet.newAudioClip(new URL(standardPath + "black2.wav"));
-        AudioClip black3 = Applet.newAudioClip(new URL(standardPath + "black3.wav"));
+        AudioClip black1 = Applet.newAudioClip(getClass().getResource(standardPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(getClass().getResource(standardPath + "black2.wav"));
+        AudioClip black3 = Applet.newAudioClip(getClass().getResource(standardPath + "black3.wav"));
 
-        AudioClip put = Applet.newAudioClip(new URL(standardPath + "put.wav"));
-        AudioClip bringout = Applet.newAudioClip(new URL(standardPath + "bringout.wav"));
+        AudioClip put = Applet.newAudioClip(getClass().getResource(standardPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(getClass().getResource(standardPath + "bringout.wav"));
 
-        AudioClip move = Applet.newAudioClip(new URL(standardPath + "move.wav"));
-        AudioClip push = Applet.newAudioClip(new URL(standardPath + "push.wav"));
-        AudioClip orient = Applet.newAudioClip(new URL(standardPath + "orient.wav"));
+        AudioClip move = Applet.newAudioClip(getClass().getResource(standardPath + "move.wav"));
+        AudioClip push = Applet.newAudioClip(getClass().getResource(standardPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(getClass().getResource(standardPath + "orient.wav"));
 
         soundLibraryStandard = new HashMap<>();
         soundLibraryStandard.put("button", button);
@@ -71,23 +70,23 @@ public class SoundsLibrary {
     }
 
     private void loadChristmasSounds() throws MalformedURLException {
-        String christmasPath = "file:res/audio/sounds/christmas/";
+        String christmasPath = "/audio/sounds/christmas/";
 
-        AudioClip white1 = Applet.newAudioClip(new URL(christmasPath + "white1.wav"));
-        AudioClip white2 = Applet.newAudioClip(new URL(christmasPath + "white2.wav"));
-        AudioClip white3 = Applet.newAudioClip(new URL(christmasPath + "white3.wav"));
+        AudioClip white1 = Applet.newAudioClip(getClass().getResource(christmasPath + "white1.wav"));
+        AudioClip white2 = Applet.newAudioClip(getClass().getResource(christmasPath + "white2.wav"));
+        AudioClip white3 = Applet.newAudioClip(getClass().getResource(christmasPath + "white3.wav"));
 
-        AudioClip black1 = Applet.newAudioClip(new URL(christmasPath + "black1.wav"));
-        AudioClip black2 = Applet.newAudioClip(new URL(christmasPath + "black2.wav"));
-        AudioClip black3 = Applet.newAudioClip(new URL(christmasPath + "black3.wav"));
+        AudioClip black1 = Applet.newAudioClip(getClass().getResource(christmasPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(getClass().getResource(christmasPath + "black2.wav"));
+        AudioClip black3 = Applet.newAudioClip(getClass().getResource(christmasPath + "black3.wav"));
 
-        AudioClip put = Applet.newAudioClip(new URL(christmasPath + "put.wav"));
-        AudioClip bringout = Applet.newAudioClip(new URL(christmasPath + "bringout.wav"));
+        AudioClip put = Applet.newAudioClip(getClass().getResource(christmasPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(getClass().getResource(christmasPath + "bringout.wav"));
 
-        AudioClip move_white = Applet.newAudioClip(new URL(christmasPath + "move_white.wav"));
-        AudioClip move_black = Applet.newAudioClip(new URL(christmasPath + "move_black.wav"));
-        AudioClip push = Applet.newAudioClip(new URL(christmasPath + "push.wav"));
-        AudioClip orient = Applet.newAudioClip(new URL(christmasPath + "orient.wav"));
+        AudioClip move_white = Applet.newAudioClip(getClass().getResource(christmasPath + "move_white.wav"));
+        AudioClip move_black = Applet.newAudioClip(getClass().getResource(christmasPath + "move_black.wav"));
+        AudioClip push = Applet.newAudioClip(getClass().getResource(christmasPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(getClass().getResource(christmasPath + "orient.wav"));
 
         soundLibraryChristmas = new HashMap<>();
 
@@ -109,19 +108,19 @@ public class SoundsLibrary {
     }
 
     private void loadStarWarsSounds() throws MalformedURLException {
-        String starwarsPath = "file:res/audio/sounds/starwars/";
+        String starwarsPath = "/audio/sounds/starwars/";
 
-        AudioClip white = Applet.newAudioClip(new URL(starwarsPath + "white.wav"));
+        AudioClip white = Applet.newAudioClip(getClass().getResource(starwarsPath + "white.wav"));
 
-        AudioClip black1 = Applet.newAudioClip(new URL(starwarsPath + "black1.wav"));
-        AudioClip black2 = Applet.newAudioClip(new URL(starwarsPath + "black2.wav"));
+        AudioClip black1 = Applet.newAudioClip(getClass().getResource(starwarsPath + "black1.wav"));
+        AudioClip black2 = Applet.newAudioClip(getClass().getResource(starwarsPath + "black2.wav"));
 
-        AudioClip put = Applet.newAudioClip(new URL(starwarsPath + "put.wav"));
-        AudioClip bringout = Applet.newAudioClip(new URL(starwarsPath + "bringout.wav"));
+        AudioClip put = Applet.newAudioClip(getClass().getResource(starwarsPath + "put.wav"));
+        AudioClip bringout = Applet.newAudioClip(getClass().getResource(starwarsPath + "bringout.wav"));
 
-        AudioClip move = Applet.newAudioClip(new URL(starwarsPath + "move.wav"));
-        AudioClip push = Applet.newAudioClip(new URL(starwarsPath + "push.wav"));
-        AudioClip orient = Applet.newAudioClip(new URL(starwarsPath + "orient.wav"));
+        AudioClip move = Applet.newAudioClip(getClass().getResource(starwarsPath + "move.wav"));
+        AudioClip push = Applet.newAudioClip(getClass().getResource(starwarsPath + "push.wav"));
+        AudioClip orient = Applet.newAudioClip(getClass().getResource(starwarsPath + "orient.wav"));
 
         soundLibraryStarWars = new HashMap<>();
 

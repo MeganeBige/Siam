@@ -2,28 +2,25 @@ package siam.audio;
 
 import javazoom.jl.player.Player;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class MP3 {
 
     private Player player;
-    private InputStream inputStream;
+    private String nom;
 
     public MP3(String nom) {
-        try {
-            inputStream = new FileInputStream(nom);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.nom = nom;
     }
 
     public void play() {
         try {
-            player = new Player(inputStream);
+            player = new Player(InputStream.class.getResourceAsStream(nom));
             PlayerThread pt = new PlayerThread();
             pt.start();
-            while (!player.isComplete()) if (player == null) return;
+            while (!player.isComplete()) {
+                if (player == null) return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

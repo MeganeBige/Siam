@@ -22,19 +22,16 @@ public class Computer extends Player implements Constants {
     }
 
     public void play(int depth) {
-        long start = System.currentTimeMillis();
-        if (depth <= 0) depth = 0;
+        if (depth <= 0) depth = 1;
         Board board = new Board(game.getBoard());
         winner = null;
-        int max = -10000;
+        int max = -100000;
         int val;
         Move best_move = null;
         int[] best_coord = new int[2];
         Orientation best_orient = null;
         Orientation best_dir = null;
         int savePieceOnBoard = pieceOnBoard;
-        int finish = 0;
-        System.out.println(finish + "%");
 
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
@@ -387,8 +384,6 @@ public class Computer extends Player implements Constants {
                         }
                     }
                 }
-                finish += 4;
-                System.out.println(finish + "%");
             }
         }
 
@@ -412,17 +407,15 @@ public class Computer extends Player implements Constants {
                 game.actionOrient(best_coord, best_orient);
                 break;
         }
-        long stop = System.currentTimeMillis();
-        System.out.println((stop - start) + "ms");
         game.nextPlayer();
     }
 
     private int max(Board gameBoard, int depth) {
-        if (depth == 0 || winner() != 0) return eval(gameBoard);
+        if (depth == 0 || winner(human) != 0) return eval(gameBoard, human);
 
         Board board = new Board(gameBoard);
         winner = null;
-        int max = -10000;
+        int max = -100000;
         int val;
         int savePieceOnBoard = pieceOnBoard;
 
@@ -633,11 +626,11 @@ public class Computer extends Player implements Constants {
     }
 
     private int min(Board gameBoard, int depth) {
-        if (depth == 0 || winner() != 0) return eval(gameBoard);
+        if (depth == 0 || winner(this) != 0) return eval(gameBoard, this);
 
         Board board = new Board(gameBoard);
         winner = null;
-        int min = 10000;
+        int min = 100000;
         int val;
         int savePieceOnBoard = human.pieceOnBoard;
 
@@ -1090,8 +1083,8 @@ public class Computer extends Player implements Constants {
         return false;
     }
 
-    private int eval(Board board) {
-        if (winner() == 0) {
+    private int eval(Board board, Player player) {
+        if (winner(player) == 0) {
             int result = 0;
             for (int x = 0; x < (BOARD_SIZE - 1); x++) {
                 for (int y = 0; y < (BOARD_SIZE - 1); y++) {
@@ -1101,8 +1094,19 @@ public class Computer extends Player implements Constants {
                                 if (board.getPiece(i,y) instanceof Animal &&
                                         ((Animal) board.getPiece(i,y)).getOrientation() == Orientation.RIGTH &&
                                         testPush(board, i, y)) {
-                                    if (board.getPiece(x-1,y).getCamp() == camp) result += 10;
-                                    else result -= 10;
+                                    int u = x - 1;
+                                    while (u >= i) {
+                                        if (board.getPiece(u,y) instanceof Animal &&
+                                                ((Animal) board.getPiece(u,y)).getOrientation() == Orientation.RIGTH) break;
+                                        u--;
+                                    }
+                                    int modif;
+                                    if (!board.isInBound(x + 1, y)) modif = 50000;
+                                    else if (board.isOnEdge(x + 1, y)) modif = 500;
+                                    else if (x + 1 == 2 && y == 2) modif = 5;
+                                    else modif = 50;
+                                    if (board.getPiece(u,y).getCamp() == camp) result += modif;
+                                    else result -= modif;
                                 }
                             }
                         }
@@ -1111,8 +1115,19 @@ public class Computer extends Player implements Constants {
                                 if (board.getPiece(i,y) instanceof Animal &&
                                         ((Animal) board.getPiece(i,y)).getOrientation() == Orientation.LEFT &&
                                         testPush(board, i, y)) {
-                                    if (board.getPiece(x+1,y).getCamp() == camp) result += 10;
-                                    else result -= 10;
+                                    int u = x + 1;
+                                    while (u <= i) {
+                                        if (board.getPiece(u,y) instanceof Animal &&
+                                                ((Animal) board.getPiece(u,y)).getOrientation() == Orientation.LEFT) break;
+                                        u++;
+                                    }
+                                    int modif;
+                                    if (!board.isInBound(x - 1, y)) modif = 50000;
+                                    else if (board.isOnEdge(x - 1, y)) modif = 500;
+                                    else if (x - 1 == 2 && y == 2) modif = 5;
+                                    else modif = 50;
+                                    if (board.getPiece(u,y).getCamp() == camp) result += modif;
+                                    else result -= modif;
                                 }
                             }
                         }
@@ -1121,8 +1136,19 @@ public class Computer extends Player implements Constants {
                                 if (board.getPiece(x,j) instanceof Animal &&
                                         ((Animal) board.getPiece(x,j)).getOrientation() == Orientation.DOWN &&
                                         testPush(board, x, j)) {
-                                    if (board.getPiece(x,y-1).getCamp() == camp) result += 10;
-                                    else result -= 10;
+                                    int v = y - 1;
+                                    while (v >= j) {
+                                        if (board.getPiece(x,v) instanceof Animal &&
+                                                ((Animal) board.getPiece(x,v)).getOrientation() == Orientation.DOWN) break;
+                                        v--;
+                                    }
+                                    int modif;
+                                    if (!board.isInBound(x, y - 1)) modif = 50000;
+                                    else if (board.isOnEdge(x, y - 1)) modif = 500;
+                                    else if (x == 2 && y - 1 == 2) modif = 5;
+                                    else modif = 50;
+                                    if (board.getPiece(x,v).getCamp() == camp) result += modif;
+                                    else result -= modif;
                                 }
                             }
                         }
@@ -1131,8 +1157,19 @@ public class Computer extends Player implements Constants {
                                 if (board.getPiece(x,j) instanceof Animal &&
                                         ((Animal) board.getPiece(x,j)).getOrientation() == Orientation.TOP &&
                                         testPush(board, x, j)) {
-                                    if (board.getPiece(x,y+1).getCamp() == camp) result += 10;
-                                    else result -= 10;
+                                    int v = y + 1;
+                                    while (v <= j) {
+                                        if (board.getPiece(x,v) instanceof Animal &&
+                                                ((Animal) board.getPiece(x,v)).getOrientation() == Orientation.TOP) break;
+                                        v++;
+                                    }
+                                    int modif;
+                                    if (!board.isInBound(x, y + 1)) modif = 50000;
+                                    else if (board.isOnEdge(x, y + 1)) modif = 500;
+                                    else if (x == 2 && y + 1 == 2) modif = 5;
+                                    else modif = 50;
+                                    if (board.getPiece(x,v).getCamp() == camp) result += modif;
+                                    else result -= modif;
                                 }
                             }
                         }
@@ -1140,12 +1177,12 @@ public class Computer extends Player implements Constants {
                 }
             }
             return result;
-        } else return winner();
+        } else return winner(player);
     }
 
-    private int winner() {
-        if (winner == camp) return 10000;
-        else if (winner == human.getCamp()) return -10000;
+    private int winner(Player player) {
+        if (winner == player.camp) return 100000;
+        else if (winner != null) return -100000;
         return 0;
     }
 

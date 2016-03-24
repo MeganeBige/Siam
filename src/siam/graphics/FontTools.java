@@ -2,8 +2,8 @@ package siam.graphics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FontTools {
 
@@ -17,20 +17,19 @@ public class FontTools {
 
     public FontTools() {
         try {
-            menuFont = loadFont("res/fonts/Frazzle.ttf");
-            textFont = loadFont("res/fonts/Alabama.ttf");
-            menuFontStarWars = loadFont("res/fonts/SFDistantGalaxy.ttf");
-            textFontStarWars = loadFont("res/fonts/SFDistantGalaxy.ttf");
-            menuFontChristmas = loadFont("res/fonts/Candcu.ttf");
-            textFontChristmas = loadFont("res/fonts/kr.ttf");
+            menuFont = loadFont("/fonts/Frazzle.ttf");
+            textFont = loadFont("/fonts/Alabama.ttf");
+            menuFontStarWars = loadFont("/fonts/SFDistantGalaxy.ttf");
+            textFontStarWars = loadFont("/fonts/SFDistantGalaxy.ttf");
+            menuFontChristmas = loadFont("/fonts/Candcu.ttf");
+            textFontChristmas = loadFont("/fonts/kr.ttf");
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
     }
 
     public static Font loadFont(String string) throws FontFormatException, IOException {
-        File fileFont = new File(string);
-        return Font.createFont(Font.TRUETYPE_FONT, fileFont);
+        return Font.createFont(Font.TRUETYPE_FONT, InputStream.class.getResourceAsStream(string));
     }
 
     public void updateFontJButton(JButton button, int size, Color color, Font font) {
